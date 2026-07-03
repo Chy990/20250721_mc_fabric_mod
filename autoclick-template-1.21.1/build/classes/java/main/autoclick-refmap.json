@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "name/modid/mixin/ExampleMixin": {
+      "loadWorld": "Lnet/minecraft/server/MinecraftServer;method_3735()V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "name/modid/mixin/ExampleMixin": {
+        "loadWorld": "Lnet/minecraft/server/MinecraftServer;method_3735()V"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "minecraft:recipes/misc/gold_ingot_from_nuggets": {
+    "criteria": {
+      "has_gold_nugget": "2025-07-24 15:02:45 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2025-07-24 15:02:45 +0800"
+    },
+    "done": true
+  },
+  "minecraft:recipes/brewing/golden_carrot": {
+    "criteria": {
+      "has_gold_nugget": "2025-07-24 15:02:45 +0800"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:snowy_plains": "2025-07-24 15:02:46 +0800",
+      "minecraft:windswept_hills": "2025-07-24 15:04:01 +0800",
+      "minecraft:snowy_beach": "2025-07-24 15:03:30 +0800"
+    },
+    "done": false
+  },
+  "DataVersion": 3955
+}

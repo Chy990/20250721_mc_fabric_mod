@@ -1,0 +1,6 @@
+v1.0.0：
+在客户端中输入/autoclick后可以实现每1秒攻击一次
+
+v1.1.0:
+/chy_autoattack ，默认攻击频率1s
+/chy_autoattack [秒数] ，自定义攻击频率

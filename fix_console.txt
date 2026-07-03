@@ -1,0 +1,8 @@
+修复中文乱码：
+$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
+
+启动测试：
+./gradlew clean runClient
+
+生成jar
+./gradlew build
