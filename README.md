@@ -2,8 +2,9 @@
 
 当前版本：**v3.0.0，适用于 Minecraft Java 1.21.11 + Fabric，Java 21**。
 
-> 工程目录暂时保留旧名 `autoclick-template-1.21.1`，里面的构建配置已升级到 **1.21.11**。
-> 根目录的 `AutoClickModClient_backup_*.java`、`AutoClickModClient_v*.java` 和 `built/` 中旧 JAR 是历史备份，不参与当前构建。旧 JAR 不适用于本次 1.21.11 测试。
+> 当前工程目录：`autoclick-template-1.21.11/`，代码、依赖和开发客户端均面向 **1.21.11**。
+> **每次 build 后，最新可安装 JAR 都在 `autoclick-template-1.21.11/build/libs/autoclick-3.0.0+mc1.21.11.jar`。**
+> `backup/` 中的旧 Java 文件、`built/` 中的历史 JAR 和工程内旧 `run/` 存档均不参与当前构建；旧存档保留原样。当前测试使用 `run-1.21.11/`。
 
 ## 20261004 更新已实现
 
@@ -13,7 +14,7 @@
 - 每次开启或调整间隔，在游戏聊天栏和客户端日志输出：`自动攻击已开启。自动攻击间隔（12 tick, 0.6 秒）`。
 - 按客户端 tick 计时；打开聊天、背包或菜单时暂停，退出世界时关闭。攻击准星指向的实体，未指向实体时只挥手，不自动挖方块。
 
-本次已通过 `./gradlew build` 和 5 项自动化测试，并确认开发客户端能够加载模组；实际打怪行为请按下方清单验证。成品另存一份在 `built/autoclick-3.0.0+mc1.21.11.jar`，后续自行构建的新文件以 `build/libs/` 为准。
+本次已通过 `./gradlew build` 和 5 项自动化测试，并确认开发客户端能够加载模组；实际打怪行为请按下方清单验证。根目录 `built/` 是手动保存的历史副本，**不会随 build 自动更新**；请始终使用当前工程 `build/libs/` 中的新文件。
 
 ## 游戏内命令
 
@@ -31,7 +32,7 @@
 ### 1. 打开终端，进入工程
 
 ```bash
-cd /Users/billchen/Desktop/Developer_MAC/20250721_mc_fabric_mod/autoclick-template-1.21.1
+cd /Users/billchen/Desktop/Developer_MAC/20250721_mc_fabric_mod/autoclick-template-1.21.11
 export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
 java -version
@@ -53,7 +54,7 @@ chmod +x gradlew
 open build/reports/tests/test/index.html
 ```
 
-可安装的成品在：
+可安装的成品在当前工程目录下（修改 `fabric.mod.json` 后重新 build，介绍和作者也会打包到这个文件）：
 
 ```text
 build/libs/autoclick-3.0.0+mc1.21.11.jar

@@ -8,3 +8,5 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
+rootProject.name = 'autoclick-1.21.11'

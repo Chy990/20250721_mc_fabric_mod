@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "autoclick",
-  "version": "3.0.0+mc1.21.11",
+  "version": "${version}",
   "name": "autoclick",
-  "description": "Client-side automatic attacks with a configurable tick interval.",
+  "description": "这是一个可以自动攻击的mod，可用于刷怪塔挂机。",
   "authors": [
-    "Me!"
+    "chy380800"
   ],
   "license": "CC0-1.0",
   "icon": "assets/autoclick/icon.png",

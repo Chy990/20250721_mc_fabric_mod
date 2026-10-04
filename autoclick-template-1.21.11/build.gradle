@@ -93,7 +93,7 @@ publishing {
 		// retrieving dependencies.
 	}
 }
-// Keep development saves separate from the archived 1.21.1 run directory.
+// Use a dedicated development game directory for Minecraft 1.21.11.
 loom.runs.client.runDir("run-1.21.11")
 
 test {
