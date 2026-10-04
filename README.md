@@ -1,9 +1,9 @@
 # 我的世界 Fabric 自动攻击器
 
-当前版本：**v3.0.0，适用于 Minecraft Java 1.21.11 + Fabric，Java 21**。
+当前版本：**v3.0.1，适用于 Minecraft Java 1.21.11 + Fabric，Java 21**。
 
 > 当前工程目录：`autoclick-template-1.21.11/`，代码、依赖和开发客户端均面向 **1.21.11**。
-> **每次 build 后，最新可安装 JAR 都在 `autoclick-template-1.21.11/build/libs/autoclick-3.0.0+mc1.21.11.jar`。**
+> **每次 build 后，最新可安装 JAR 都在 `autoclick-template-1.21.11/build/libs/autoclick-3.0.1+mc1.21.11.jar`。**
 > `backup/` 中的旧 Java 文件、`built/` 中的历史 JAR 和工程内旧 `run/` 存档均不参与当前构建；旧存档保留原样。当前测试使用 `run-1.21.11/`。
 
 ## 20261004 更新已实现
@@ -12,9 +12,9 @@
 - 原 `/chy_autoattack` 改为 **`/auto_attack`**；保留 `/chy_help`，更新帮助内容。
 - 无参数命令用于开关：每次从关闭状态开启，均恢复 **12 tick（0.6 秒）**，不沿用上次自定义值。
 - 每次开启或调整间隔，在游戏聊天栏和客户端日志输出：`自动攻击已开启。自动攻击间隔（12 tick, 0.6 秒）`。
-- 按客户端 tick 计时；打开聊天、背包或菜单时暂停，退出世界时关闭。攻击准星指向的实体，未指向实体时只挥手，不自动挖方块。
+- 按客户端 tick 计时；打开聊天、背包或 Esc 菜单时继续执行自动攻击逻辑，退出世界时关闭。攻击准星指向的实体，未指向实体时只挥手，不自动挖方块。
 
-本次已通过 `./gradlew build` 和 5 项自动化测试，并确认开发客户端能够加载模组；实际打怪行为请按下方清单验证。根目录 `built/` 是手动保存的历史副本，**不会随 build 自动更新**；请始终使用当前工程 `build/libs/` 中的新文件。
+构建和计时逻辑由自动化测试验证；打开界面时的实际打怪行为请按下方清单验证。根目录 `built/` 是手动保存的历史副本，**不会随 build 自动更新**；请始终使用当前工程 `build/libs/` 中的新文件。
 
 ## 游戏内命令
 
@@ -57,7 +57,7 @@ open build/reports/tests/test/index.html
 可安装的成品在当前工程目录下（修改 `fabric.mod.json` 后重新 build，介绍和作者也会打包到这个文件）：
 
 ```text
-build/libs/autoclick-3.0.0+mc1.21.11.jar
+build/libs/autoclick-3.0.1+mc1.21.11.jar
 ```
 
 **不要安装 `-sources.jar`，也不要拿 `build/devlibs` 里的开发 JAR。** 后续修改代码后重新执行 `./gradlew build` 即可；需要完全重新生成构建产物时执行 `./gradlew clean build`。
@@ -77,12 +77,14 @@ Gradle 会启动已加载本模组及 Fabric API 的 Minecraft 1.21.11 开发客
 新建一个临时单人创造世界，拿剑、用刷怪蛋生成目标，然后依次检查：
 
 1. 输入 `/chy_help`：帮助中只应有自动攻击相关说明。
-2. 输入 `/auto_attack` 并关闭聊天框：提示 `12 tick, 0.6 秒`，准星指着目标时开始攻击。
+2. 输入 `/auto_attack`：提示 `12 tick, 0.6 秒`，准星指着目标时开始攻击。
 3. 再输入 `/auto_attack`：提示关闭，停止攻击。
 4. 输入 `/auto_attack 2`：提示 `40 tick, 2.0 秒`；再输入两次 `/auto_attack`（先关、再开），必须恢复 `12 tick, 0.6 秒`。
 5. 输入 `/auto_attack 0.06`：提示 `2 tick, 0.1 秒`；输入 `0`、负数、`11` 或文字时应报参数错误且不改变现有设置。
-6. 开启时打开背包或菜单，应暂停；关掉界面后继续。退出世界再进入，应保持关闭。
+6. 在多人服务器或未暂停的世界中，准星对着目标开启自动攻击，再打开聊天、背包或 Esc 菜单，应继续攻击，关闭界面后也应继续。退出世界再进入，应保持关闭。
 7. `/chy_deepseek`、`/chy_say`、`/chy_autoattack` 不再由本模组提供。
+
+注意：单人游戏按 Esc 时，Minecraft 本身可能暂停整个世界；模组不再因菜单主动暂停或关闭，但无法让原版已暂停的世界继续处理伤害。多人服务器的 Esc 菜单不会暂停服务器。
 
 从终端启动时，开启信息会显示在终端；也可查看 `run-1.21.11/logs/latest.log`。通过正式启动器运行时，相同信息在游戏目录的 `logs/latest.log` 中。
 
@@ -93,7 +95,7 @@ Gradle 会启动已加载本模组及 Fabric API 的 Minecraft 1.21.11 开发客
 1. 从 [Fabric 官网](https://fabricmc.net/use/installer/) 下载通用 `.jar` 安装器。在终端使用 `java -jar` 加安装器完整路径运行它（可以把下载的文件拖进终端填入路径）。选择 **Client、Minecraft 1.21.11、Loader 0.19.5 或更高兼容版本**，安装启动配置。
 2. 从 [Fabric API 下载页](https://modrinth.com/mod/fabric-api/versions?g=1.21.11) 下载 **Minecraft 1.21.11** 对应的 Fabric API。本项目编译使用 `0.141.6+1.21.11`。
 3. 在启动器里选中 Fabric 的 1.21.11 配置。先确认该配置的“游戏目录”；默认 macOS 路径是 `~/Library/Application Support/minecraft`。如果你设过自定义目录，后续使用自定义目录。
-4. 将 **Fabric API JAR** 和 **`autoclick-3.0.0+mc1.21.11.jar`** 放进该游戏目录的 `mods` 文件夹。删除或移走同一个 `autoclick` 模组的旧版本，避免重复加载。无需解压 JAR。
+4. 将 **Fabric API JAR** 和 **`autoclick-3.0.1+mc1.21.11.jar`** 放进该游戏目录的 `mods` 文件夹。删除或移走同一个 `autoclick` 模组的旧版本，避免重复加载。无需解压 JAR。
 5. 使用这个 Fabric 配置启动，再在临时世界按上面的清单测试。
 
 默认目录可这样打开；仅在确认使用默认游戏目录后执行复制命令：
@@ -101,7 +103,7 @@ Gradle 会启动已加载本模组及 Fabric API 的 Minecraft 1.21.11 开发客
 ```bash
 mkdir -p "$HOME/Library/Application Support/minecraft/mods"
 open "$HOME/Library/Application Support/minecraft/mods"
-cp build/libs/autoclick-3.0.0+mc1.21.11.jar "$HOME/Library/Application Support/minecraft/mods/"
+cp build/libs/autoclick-3.0.1+mc1.21.11.jar "$HOME/Library/Application Support/minecraft/mods/"
 ```
 
 本模组只需安装在客户端。若命令不存在，检查是否启动了 Fabric 配置、两份 JAR 是否放在正确游戏目录，以及是否用错 Minecraft 版本。
@@ -109,6 +111,9 @@ cp build/libs/autoclick-3.0.0+mc1.21.11.jar "$HOME/Library/Application Support/m
 参考：[Fabric 1.21.11 迁移说明](https://fabricmc.net/2025/12/05/12111.html)、[macOS 安装 Fabric](https://docs.fabricmc.net/players/installing-fabric/macos)。
 
 # 更新记录
+### v3.0.1
+移除打开聊天、背包和 Esc 菜单时主动暂停自动攻击的限制，恢复后台挂机用法。
+
 ### v1.0.0
 /autoclick可以使用
 

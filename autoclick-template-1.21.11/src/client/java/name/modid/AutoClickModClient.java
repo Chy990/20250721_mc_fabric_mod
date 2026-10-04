@@ -39,7 +39,7 @@ public class AutoClickModClient implements ClientModInitializer {
                     context.getSource().sendFeedback(Text.literal(
                         "/auto_attack <秒数> - 开启或调整间隔（0.01–10 秒），向上取整到整 tick，最短 1 tick。"));
                     context.getSource().sendFeedback(Text.literal(
-                        "例如 /auto_attack 1：每 20 tick（1 秒）攻击一次。打开界面时暂停，退出世界后关闭。"));
+                        "例如 /auto_attack 1：每 20 tick（1 秒）攻击一次。打开聊天或菜单不关闭自动攻击，退出世界后关闭。"));
                     context.getSource().sendFeedback(Text.literal("/chy_help - 查看帮助。"));
                     return 1;
                 }));
@@ -51,9 +51,8 @@ public class AutoClickModClient implements ClientModInitializer {
                 attack.stop();
                 return;
             }
-            // Do not attack through menus, while paused, or after death.
-            if (client.isPaused() || client.currentScreen != null || !client.player.isAlive()
-                    || client.player.isSpectator()) {
+            // UI screens do not suspend auto attack; keep counting client ticks.
+            if (!client.player.isAlive() || client.player.isSpectator()) {
                 return;
             }
             if (attack.tick()) {
