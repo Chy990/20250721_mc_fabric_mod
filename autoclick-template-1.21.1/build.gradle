@@ -39,7 +39,8 @@ dependencies {
 
     // Fabric API 整包（包含所有模块，包括 command-api）
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	implementation 'org.json:json:20231013'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
@@ -91,4 +92,10 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+// Keep development saves separate from the archived 1.21.1 run directory.
+loom.runs.client.runDir("run-1.21.11")
+
+test {
+    useJUnitPlatform()
 }
