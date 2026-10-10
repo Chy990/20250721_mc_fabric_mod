@@ -1,4 +1,7 @@
 .DS_Store
 .gradle/
 **/build/
+
+# Local Minecraft development clients, including saves, logs and settings.
+**/run/
 **/run-*/

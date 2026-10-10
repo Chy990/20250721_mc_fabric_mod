@@ -1,31 +1,43 @@
-# 我的世界 Fabric 自动攻击器
+# chy — Minecraft Fabric 挂机辅助
 
-当前版本：**v3.0.1，适用于 Minecraft Java 1.21.11 + Fabric，Java 21**。
+当前版本：**v3.2.0，适用于 Minecraft Java 1.21.11 + Fabric，Java 21**。
 
-> 当前工程目录：`autoclick-template-1.21.11/`，代码、依赖和开发客户端均面向 **1.21.11**。
-> **每次 build 后，最新可安装 JAR 都在 `autoclick-template-1.21.11/build/libs/autoclick-3.0.1+mc1.21.11.jar`。**
-> `backup/` 中的旧 Java 文件、`built/` 中的历史 JAR 和工程内旧 `run/` 存档均不参与当前构建；旧存档保留原样。当前测试使用 `run-1.21.11/`。
+伪键盘操作实现挂机和其他功能。
 
-## 20261004 更新已实现
+项目链接：[Chy990/20250721_mc_fabric_mod](https://github.com/Chy990/20250721_mc_fabric_mod)。
 
-- 移除当前模组中的 DeepSeek 聊天、HTTP 请求、API Key、JSON 依赖及 `/chy_deepseek`、`/chy_say` 命令。
-- 原 `/chy_autoattack` 改为 **`/auto_attack`**；保留 `/chy_help`，更新帮助内容。
-- 无参数命令用于开关：每次从关闭状态开启，均恢复 **12 tick（0.6 秒）**，不沿用上次自定义值。
-- 每次开启或调整间隔，在游戏聊天栏和客户端日志输出：`自动攻击已开启。自动攻击间隔（12 tick, 0.6 秒）`。
-- 按客户端 tick 计时；打开聊天、背包或 Esc 菜单时继续执行自动攻击逻辑，退出世界时关闭。攻击准星指向的实体，未指向实体时只挥手，不自动挖方块。
+> 当前工程目录仍为 `autoclick-template-1.21.11/`；模组名称、ID 和构建产物均已改为 **chy**。
+> **每次 build 后，最新可安装 JAR 都在 `autoclick-template-1.21.11/build/libs/chy-3.2.0+mc1.21.11.jar`。**
+> `backup/`、`built/` 中的历史文件及旧 `run/` 存档不参与当前构建，保留原样。开发客户端使用 `run-1.21.11/`。
 
-构建和计时逻辑由自动化测试验证；打开界面时的实际打怪行为请按下方清单验证。根目录 `built/` 是手动保存的历史副本，**不会随 build 自动更新**；请始终使用当前工程 `build/libs/` 中的新文件。
+## 20261011 更新已实现
+
+- `/auto_attack` 更名为 `/left_click`，保留原有攻击实体、无目标时挥手的行为，不自动挖方块。
+- 新增 `/right_click`，按间隔执行原版单次右键：手持方块时尝试放置，也可操作容器、按钮或使用物品；遵循原版主副手交互规则。
+- 左右键独立开关、独立计时，默认均为 **12 tick**；参数统一改为**正整数 tick**，最小 1，最大 2147483647。每次无参数重新开启均恢复 12 tick。
+- 开启或调整时，聊天栏和客户端日志显示 `自动左键，间隔12 tick` 或 `自动右键，间隔12 tick`，不再显示秒数。
+- 新增 `/shift`：切换持续潜行，可配合右键在容器上放置方块；关闭后恢复实际键盘输入。
+- `/chy_help` 包含全部功能、参数、示例及退出世界时的行为。
+- 模组名称、ID、日志标识和 JAR 名称改为 `chy`，版本升级到 **3.2.0**，介绍和项目链接已更新。
+- 游戏聊天栏中的开关、间隔提示和 `/chy_help` 帮助统一使用红色文字。
+- 自定义图标 `chy_mod.png` 已放到工程的 `src/main/resources/assets/chy/icon.png`，由 `fabric.mod.json` 的 `icon` 字段引用；以后替换此文件并重新 build 即可更新图标。
+
+打开聊天、背包或菜单不会关闭功能。退出世界或断开连接后，左右键和自动潜行全部关闭。死亡或旁观期间不自动点击。单人世界暂停时暂停自动点击计时，恢复游戏后继续；多人服务器中的 Esc 菜单不暂停服务器。卡顿时实际执行频率可能降低。
+
+右键间隔指每隔多少 tick **尝试一次右键**；能否成功放置仍取决于准星、距离、剩余方块及原版/服务器规则。正在持续使用物品时不会重复启动右键操作；本功能用于周期单击，不模拟一直按住使用键。
 
 ## 游戏内命令
 
 | 命令 | 效果 |
 | --- | --- |
-| `/auto_attack` | 开启默认 12 tick 自动攻击；已开启时则关闭 |
-| `/auto_attack 1` | 开启或调整为 20 tick（1 秒） |
-| `/auto_attack 0.6` | 开启或调整为 12 tick（0.6 秒） |
-| `/chy_help` | 查看帮助 |
+| `/left_click` | 开启默认 12 tick 自动左键；已开启时关闭 |
+| `/left_click 20` | 开启或调整为每 20 tick 自动左键 |
+| `/right_click` | 开启默认 12 tick 自动右键；已开启时关闭 |
+| `/right_click 4` | 开启或调整为每 4 tick 自动右键 |
+| `/shift` | 开启/关闭持续潜行 |
+| `/chy_help` | 查看全部帮助 |
 
-参数仍以**秒**为单位，允许 0.01–10。按每秒 20 tick 换算，向上取整到完整 tick，最小 1 tick。例如 `0.01` 实际为 1 tick（0.05 秒），`0.06` 实际为 2 tick（0.1 秒），反馈显示实际间隔。秒数是正常 20 TPS 下的换算；游戏卡顿时实际墙钟时间可能更长。
+`/left_click 1` 表示每 **1 tick** 执行一次。小数、0、负数、文字及超过整数上限的参数会被拒绝，不改变现有设置。调整间隔时重新计时，满一个间隔后首次执行。旧 `/auto_attack`、`/chy_autoattack`、`/chy_deepseek`、`/chy_say` 不再由本模组提供。
 
 ## Mac 开发、测试和编译
 
@@ -39,7 +51,7 @@ java -version
 chmod +x gradlew
 ```
 
-本机已检测到 ARM64 Java 21 JDK，足够开发和编译。上面两条 `export` 对当前终端窗口生效，每次新开终端可重新执行。使用项目自带的 Gradle Wrapper，不必安装全局 Gradle、Maven 或 IDE。第一次构建需要联网下载依赖，耗时会较长。
+使用 Java 21 和项目自带的 Gradle Wrapper。第一次构建需要联网下载依赖。
 
 ### 2. 自动化测试并编译 JAR
 
@@ -47,70 +59,70 @@ chmod +x gradlew
 ./gradlew build
 ```
 
-看到 `BUILD SUCCESSFUL` 表示编译、测试和打包成功。回归测试覆盖默认 12 tick、停止后重开恢复默认、调整间隔重置计时、取整和非法参数。单独运行测试：
+看到 `BUILD SUCCESSFUL` 表示编译、测试和打包成功。回归测试覆盖默认 12 tick、停止后重开恢复默认、调整间隔重置计时、整数 tick 边界、非法参数不改变状态、左右键独立计时和退出重置。单独运行测试：
 
 ```bash
 ./gradlew test
 open build/reports/tests/test/index.html
 ```
 
-可安装的成品在当前工程目录下（修改 `fabric.mod.json` 后重新 build，介绍和作者也会打包到这个文件）：
+可安装的成品：
 
 ```text
-build/libs/autoclick-3.0.1+mc1.21.11.jar
+build/libs/chy-3.2.0+mc1.21.11.jar
 ```
 
-**不要安装 `-sources.jar`，也不要拿 `build/devlibs` 里的开发 JAR。** 后续修改代码后重新执行 `./gradlew build` 即可；需要完全重新生成构建产物时执行 `./gradlew clean build`。
+**不要安装 `-sources.jar` 或 `build/devlibs` 里的开发 JAR。** 后续改代码后执行 `./gradlew build`；需要完全重新生成产物时执行 `./gradlew clean build`。`built/` 仅为手动保存的历史副本，不会随 build 更新。
 
 ```bash
 open build/libs
 ```
 
-### 3. 直接启动开发游戏测试
+### 3. 启动开发客户端并验证游戏行为
 
 ```bash
 ./gradlew runClient
 ```
 
-Gradle 会启动已加载本模组及 Fabric API 的 Minecraft 1.21.11 开发客户端；不需要手动复制 JAR。它使用工程内独立的 `run-1.21.11/` 目录，和你平常启动器的游戏、旧 `run/` 存档分开。开发客户端适合单人世界测试，不应当作已登录的正式启动器客户端使用。
+这会启动加载本模组和 Fabric API 的 Minecraft 1.21.11 开发客户端，使用独立的 `run-1.21.11/` 目录。开发客户端不应当作已登录的正式启动器客户端使用。自动化状态测试不能替代以下实际游戏验证：
 
-新建一个临时单人创造世界，拿剑、用刷怪蛋生成目标，然后依次检查：
+1. 输入 `/chy_help`，确认包含左右键、tick 参数、持续潜行、开关方式及退出重置说明。
+2. 准星对着实体输入 `/left_click`，确认显示 `自动左键，间隔12 tick` 并周期攻击；准星移开后只挥手、不挖方块。再次输入关闭。
+3. 输入 `/left_click 40`，再无参数关闭、重开，应恢复 12 tick。`/right_click` 也执行同样检查。
+4. 手持方块对着可放置的位置输入 `/right_click`，确认显示 `自动右键，间隔12 tick` 并周期放置；输入 `/right_click 4`，确认频率改变。移动准星继续放置，检查副手方块和方块耗尽时的行为。
+5. 分别对两个命令测试参数 `1`、`20`，并测试 `0`、`-1`、`0.6`、`abc`、`2147483648`，非法参数应报错且不改变原设置。
+6. 左右键同时开启、分别调整间隔，再关闭其中一个，另一个应继续。
+7. 输入 `/shift` 后检查潜行移动、平台边缘防掉落、在箱子上放置方块；打开聊天/背包后应保持潜行。再次输入关闭，正常走动和手动 Shift 应恢复。也检查游戏设置中的“切换潜行”模式。
+8. 在多人服务器或未暂停的世界中，打开聊天、背包、Esc 菜单后，左右键仍应按间隔执行。单人世界暂停时不执行，恢复后继续。
+9. 三项功能开启后退出世界，重新进入应全部关闭；检查死亡重生后输入正常，旁观模式不自动点击。
+10. `/auto_attack`、`/chy_autoattack`、`/chy_deepseek`、`/chy_say` 不再由本模组提供；日志中的模组标识为 `chy`。
 
-1. 输入 `/chy_help`：帮助中只应有自动攻击相关说明。
-2. 输入 `/auto_attack`：提示 `12 tick, 0.6 秒`，准星指着目标时开始攻击。
-3. 再输入 `/auto_attack`：提示关闭，停止攻击。
-4. 输入 `/auto_attack 2`：提示 `40 tick, 2.0 秒`；再输入两次 `/auto_attack`（先关、再开），必须恢复 `12 tick, 0.6 秒`。
-5. 输入 `/auto_attack 0.06`：提示 `2 tick, 0.1 秒`；输入 `0`、负数、`11` 或文字时应报参数错误且不改变现有设置。
-6. 在多人服务器或未暂停的世界中，准星对着目标开启自动攻击，再打开聊天、背包或 Esc 菜单，应继续攻击，关闭界面后也应继续。退出世界再进入，应保持关闭。
-7. `/chy_deepseek`、`/chy_say`、`/chy_autoattack` 不再由本模组提供。
+日志位于 `run-1.21.11/logs/latest.log`；通过正式启动器运行时位于对应游戏目录的 `logs/latest.log`。
 
-注意：单人游戏按 Esc 时，Minecraft 本身可能暂停整个世界；模组不再因菜单主动暂停或关闭，但无法让原版已暂停的世界继续处理伤害。多人服务器的 Esc 菜单不会暂停服务器。
+### 4. 安装到 Minecraft 1.21.11
 
-从终端启动时，开启信息会显示在终端；也可查看 `run-1.21.11/logs/latest.log`。通过正式启动器运行时，相同信息在游戏目录的 `logs/latest.log` 中。
+关闭游戏后：
 
-### 4. 安装到你平常玩的 Minecraft 1.21.11
+1. 安装 [Fabric Loader](https://fabricmc.net/use/installer/) 的 Minecraft **1.21.11** 配置，本项目要求 Loader **0.19.5 或更高兼容版本**。
+2. 下载 Minecraft **1.21.11** 对应的 [Fabric API](https://modrinth.com/mod/fabric-api/versions?g=1.21.11)，本项目编译使用 `0.141.6+1.21.11`。
+3. 确认启动配置的“游戏目录”。macOS 默认是 `~/Library/Application Support/minecraft`，自定义配置使用对应目录。
+4. **先移走旧 `autoclick` 和旧 `chy` JAR**，再把 Fabric API 和 `chy-3.2.0+mc1.21.11.jar` 放入该目录的 `mods` 文件夹。由于模组 ID 已改名，旧 `autoclick` 不会自动被新版替换，必须手动移走。
+5. 使用 Fabric 1.21.11 配置启动，在临时世界按上面的清单验证。
 
-只有原版 1.21.11 还不能加载 Fabric 模组。关闭游戏后：
-
-1. 从 [Fabric 官网](https://fabricmc.net/use/installer/) 下载通用 `.jar` 安装器。在终端使用 `java -jar` 加安装器完整路径运行它（可以把下载的文件拖进终端填入路径）。选择 **Client、Minecraft 1.21.11、Loader 0.19.5 或更高兼容版本**，安装启动配置。
-2. 从 [Fabric API 下载页](https://modrinth.com/mod/fabric-api/versions?g=1.21.11) 下载 **Minecraft 1.21.11** 对应的 Fabric API。本项目编译使用 `0.141.6+1.21.11`。
-3. 在启动器里选中 Fabric 的 1.21.11 配置。先确认该配置的“游戏目录”；默认 macOS 路径是 `~/Library/Application Support/minecraft`。如果你设过自定义目录，后续使用自定义目录。
-4. 将 **Fabric API JAR** 和 **`autoclick-3.0.1+mc1.21.11.jar`** 放进该游戏目录的 `mods` 文件夹。删除或移走同一个 `autoclick` 模组的旧版本，避免重复加载。无需解压 JAR。
-5. 使用这个 Fabric 配置启动，再在临时世界按上面的清单测试。
-
-默认目录可这样打开；仅在确认使用默认游戏目录后执行复制命令：
+确认使用默认目录后，可从工程目录复制：
 
 ```bash
 mkdir -p "$HOME/Library/Application Support/minecraft/mods"
 open "$HOME/Library/Application Support/minecraft/mods"
-cp build/libs/autoclick-3.0.1+mc1.21.11.jar "$HOME/Library/Application Support/minecraft/mods/"
+cp build/libs/chy-3.2.0+mc1.21.11.jar "$HOME/Library/Application Support/minecraft/mods/"
 ```
 
-本模组只需安装在客户端。若命令不存在，检查是否启动了 Fabric 配置、两份 JAR 是否放在正确游戏目录，以及是否用错 Minecraft 版本。
-
-参考：[Fabric 1.21.11 迁移说明](https://fabricmc.net/2025/12/05/12111.html)、[macOS 安装 Fabric](https://docs.fabricmc.net/players/installing-fabric/macos)。
+本模组只需安装在客户端。命令不存在时，检查 Fabric 配置、游戏版本和 mods 目录。
 
 # 更新记录
+### v3.2.0
+模组更名为 chy；自动攻击命令改为 /left_click，新增 /right_click 与 /shift。左右键统一使用整数 tick，默认 12 tick；更新反馈、帮助、介绍和项目链接。
+
 ### v3.0.1
 移除打开聊天、背包和 Esc 菜单时主动暂停自动攻击的限制，恢复后台挂机用法。
 
@@ -142,3 +154,12 @@ cp build/libs/autoclick-3.0.1+mc1.21.11.jar "$HOME/Library/Application Support/m
 2. 将原本的chy_autoclick指令触发改为auto_attack，并且保持默认为12tick。
 3. 修复一个小bug：以前在autoclick的时候后面跟上一个不是0.6s(12tick)的值时，停止以后再打开都默认是之前输入的那个值了。这不对。每次打开这个功能的时候都默认12tick。
 4. 每次打开auto_attck的时候，在终端显示：自动攻击间隔（xx tick, xx 秒）这样子。
+
+### 20261011计划更新：
+1. 为了方便区分，将原本的auto_attack指令改为left_click，默认仍然保持为12tick，只是单独改变指令形式。
+2. 新增right_click指令，默认12gt一次。这个right_click即为放置方块的作用，即每12gt放置一次方块。同时类似left_click可以在后缀更改频率。更改单位为tick。
+3. 对两个click的指令触发以后文字显示改为：自动左/右键，间隔xx tick。不再用秒作为单位。
+4. 新增一个/shift的指令。该指令可以模拟一直按着shift的潜行状态。当再次输入的时候即关闭潜行状态。
+5. 介绍里“这是一个可以自动攻击的mod，可用于刷怪塔挂机“改为“伪键盘操作实现挂机和其他功能“。新增链接：https://github.com/Chy990/20250721_mc_fabric_mod
+6. 对所有功能都在/chy_help里写好。然后这整个mod改名为chy，不再叫autoclick。
+7. 这次更新以后版本定位3.2.0

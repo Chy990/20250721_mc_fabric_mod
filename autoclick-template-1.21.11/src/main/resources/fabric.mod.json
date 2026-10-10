@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "id": "autoclick",
+  "id": "chy",
   "version": "${version}",
-  "name": "autoclick",
-  "description": "这是一个可以自动攻击的mod，可用于刷怪塔挂机。",
+  "name": "chy",
+  "description": "伪键盘操作实现挂机和其他功能",
   "authors": [
     "chy380800"
   ],
   "license": "CC0-1.0",
-  "icon": "assets/autoclick/icon.png",
+  "icon": "assets/chy/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "name.modid.AutoClickModClient"
+      "name.modid.ChyModClient"
     ]
   },
   "depends": {
@@ -20,5 +20,15 @@
     "minecraft": "~1.21.11",
     "java": ">=21",
     "fabric-api": "*"
-  }
+  },
+  "contact": {
+    "homepage": "https://github.com/Chy990/20250721_mc_fabric_mod",
+    "sources": "https://github.com/Chy990/20250721_mc_fabric_mod"
+  },
+  "mixins": [
+    {
+      "config": "chy.client.mixins.json",
+      "environment": "client"
+    }
+  ]
 }
